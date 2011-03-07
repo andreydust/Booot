@@ -383,7 +383,7 @@ class AdminModule {
 					
 					
 					//ДАННЫЕ ВЫВОДЯТСЯ НАПРЯМУЮ БЕЗ ОБРАБОТКИ
-					$row[$field] = $value;
+					$row[$field] = htmlspecialchars($value);
 				}
 			}
 			
@@ -1093,7 +1093,7 @@ class AdminModule {
 					}
 					
 					//ДАННЫЕ ВЫВОДЯТСЯ НАПРЯМУЮ БЕЗ ОБРАБОТКИ
-					$row[$field] = $value;
+					$row[$field] = htmlspecialchars($value);
 				}
 			}
 			
