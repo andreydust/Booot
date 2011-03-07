@@ -1,0 +1,27 @@
+.autoform {
+	background:#f4edd9;
+	border:solid 1px #d3cdbc;
+	padding:20px 0 16px 18px;
+	margin:0 20px 2em 0;
+	-moz-border-radius: 12px;
+	border-radius: 12px;
+	overflow:hidden;
+	behavior: url(../css/ie-css3.htc);
+}
+.autoform h2 { margin: 0; }
+.autoform label { display: block; margin: 1em 0 .1em .4em; }
+.autoform input,.autoform textarea {
+	border:solid 1px #d3cdbc; display: block; padding:.3em; width:90%; font-size:14px;
+	font-family: Trebuchet MS, arial, sans-serif;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background-color: white;
+}
+.autoform textarea { height: 6.1em; }
+.autoform .autoformCheckbox { margin:1em 0 .3em; }
+.autoform .autoformCheckbox input { display: inline !important; width:auto; margin: 0 0 0 0; vertical-align: middle; }
+.autoform .autoformCheckbox label { display: inline !important; width:auto; }
+.autoform button { display: block; margin: 1.5em 0 .3em; font-size:14px; height:30px; }
+.autoform .required { }
+.autoform .jep { color:red; }
+.autoform .requiredHint { margin:1.5em 0 0 0; }

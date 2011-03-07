@@ -1,0 +1,20 @@
+RewriteEngine on
+RewriteBase /
+
+# REWRITE
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L,QSA]
+
+# GZIP
+AddEncoding gzip .gz
+RewriteCond %{HTTP:Accept-encoding} gzip
+RewriteCond %{HTTP_USER_AGENT} !Safari
+RewriteCond %{REQUEST_FILENAME}.gz -f
+RewriteRule ^(.*)$ $1.gz [QSA,L]
+<FilesMatch .*\.css.gz$>
+ ForceType text/css
+</FilesMatch>
+<FilesMatch .*\.js.gz$>
+ ForceType application/x-javascript
+</FilesMatch>

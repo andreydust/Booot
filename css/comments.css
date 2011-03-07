@@ -1,0 +1,172 @@
+div.block_comments div.comment_lvl {
+    margin-left: 30px;
+    margin-top: 20px;
+}
+
+div.block_comments > div.comment_lvl {
+    margin-left: 0px;
+}
+
+div.comment_add { margin-left: -23px; background: #fcf8f3; border: 1px solid #bebebe; border-radius: 8px; -moz-border-radius: 8px; margin-top: 15px; padding: 15px 22px 22px 22px;  }
+div.comment_add .field50 { width: 49%; margin-bottom: 15px; float: left; }
+div.comment_add .field { float: left; width: 98%; margin-bottom: 22px; }
+div.comment_add .field_place { margin-right: 37px; position: relative; }
+div.comment_add LABEL { margin-bottom: 3px; font-size: 13px; }
+div.comment_add INPUT { height: 24px; vertical-align: middle; padding-top: 0px; }
+div.comment_add LABEL, div.comment_add INPUT, div.comment_add TEXTAREA { display: block; width: 100%; font-size: 12px; }
+div.comment_add INPUT, div.comment_add TEXTAREA { background: #fff; border: 1px solid #bfbfbf; }
+div.comment_add TEXTAREA { height: 112px; }
+
+div.comment_add a.cmt_add {
+    border: 1px solid #d96e23;
+
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+
+    background: #bf5204;
+    background: -moz-linear-gradient(top, #f27d29 30%, #bf5204 80%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(30%,#f27d29), color-stop(80%,#bf5204));
+
+    color: #fff;
+    text-shadow: 0px -1px 1px #803703;
+
+    box-shadow: 0px 0px 3px #592602;
+    -moz-box-shadow: 0px 0px 3px #592602;
+    -webkit-box-shadow: 0px 0px 3px #592602;
+
+    padding: 4px 15px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+div.comment_add a.cmt_add:hover {
+    background: #d95d05;
+    background: -moz-linear-gradient(top, #ff842b 30%, #d95d05 80%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(30%,#ff842b), color-stop(80%,#d95d05));
+}
+
+div.comment_add input[type="hidden"] { display: none !important }
+
+div.block_comments { margin-top: 30px; }
+div.comment { color: #686868; list-style: none; margin: 0px 0px 20px; padding: 0px; font-size: 13px; border: 1px solid transparent }
+
+div.comment .user { font-size: 14px; margin-bottom: 7px; }
+div.comment .user .avatar { vertical-align: middle; }
+div.comment .user .avatar img { vertical-align: middle; margin-top: -4px; margin-right: 5px; }
+div.comment blockquote, div.comment cite { background: #fcf8f3; border-left: 3px solid #bf5204; font-size: 11px; display: block; font-style: normal; padding: 13px; margin:  10px 0px 10px 0px; }
+
+a#comment_root {
+    font-size: 1.2em;
+    text-decoration: none;
+    color: #e25f00;
+    border-bottom: 1px dashed #e25f00;
+}
+
+a#comment_root:hover {
+    color: #b34b00;
+    border-bottom: 1px dashed #b34b00;
+}
+
+div.comment_clear { clear: both; }
+
+a.cmt_answer {
+    color: #e25f00;
+    border-bottom: 1px dashed #e25f00;
+    text-decoration: none;
+}
+
+a.cmt_answer:hover {
+    color: #b34b00;
+    border-bottom: 1px dashed #b34b00;
+}
+
+div.comment .btnDel {
+    float: right;
+    cursor: pointer;
+    background: url('/admin/images/icons/cross.png') left top no-repeat;
+    width: 16px;
+    height: 16px;
+}
+
+div.comment .btnDel:hover {
+    opacity: 0.8;
+}
+
+div.commentDelHover {
+    border: 1px solid #d2d2d2;
+}
+
+div.comment-deleted .btnDel, div.comment-deleted .cmt_answer {
+    display: none;
+}
+
+div.comment-deleted > p, div.comment-deleted > div.user {
+    opacity: 0.7;
+}
+
+#cmtMegaButton {
+    position: fixed;
+	z-index: 100500;
+    right: 0px;
+    top: 50%;
+    width: 32px;
+    height: 32px;
+
+    border-radius: 7px 0px 0px 7px;
+    -moz-border-radius: 7px 0px 0px 7px;
+    -webkit-border-radius: 7px 0px 0px 7px;
+
+    box-shadow: 0px 0px 7px #8c3c03;
+    -moz-box-shadow: 0px 0px 7px #8c3c03;
+    -webkit-box-shadow: 0px 0px 7px #8c3c03;
+
+    background: #fff url('/admin/images/comments_moderation.png') left top no-repeat;
+    color: transparent;
+    cursor: pointer;
+}
+
+#cmtMegaButton:hover {
+    opacity: 0.9;
+}
+
+#cmtSelect {
+    border: 1px dashed #777;
+    display: none;
+    position:absolute;
+}
+
+div.comment[marked='true'] {
+    border: 1px dashed #c33913;
+}
+
+div.comment[overlapped='true'] {
+    opacity: 0.9;
+    border: 1px solid #d2d2d2;
+}
+
+#cmtTooltip {
+    position: fixed;
+	z-index: 100500;
+    left: 20px;
+    top: 20px;
+    width: 20%;
+    background-color: #fff7b0;
+    border: 1px dashed #d2d2b2;
+    opacity: 0.9;
+    padding: 5px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    display: none;
+}
+
+#cmtTooltip .delete {
+    color: #c33913;
+    border-bottom: 1px dashed #c33913;
+    cursor: pointer;
+}
+
+#cmtTooltip .delete:hover {
+    color: #80250c;
+    border-bottom: 1px dashed #80250c;
+}

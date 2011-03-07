@@ -1,0 +1,73 @@
+.oneitem .jProductEditPlaceholder {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    opacity: 0;
+
+    -webkit-transition: opacity 0.3s ease;
+    -moz-transition: opacity 0.3s ease;
+    -o-transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease;
+}
+
+.oneitem:hover .jProductEditPlaceholder {
+    opacity: 1;
+}
+
+
+#btnGodmode {
+    position: fixed;
+    top: 0;
+    left: 50%;
+
+    padding: 5px;
+    border: 1px solid #d96e23;
+    border-top: none;
+
+    border-radius: 0px 0px 7px 7px;
+    -webkit-border-radius: 0px 0px 7px 7px;
+    -moz-border-radius: 0px 0px 7px 7px;
+
+    box-shadow: 0px 0px 7px #8c3c03;
+    -moz-box-shadow: 0px 0px 7px #8c3c03;
+    -webkit-box-shadow: 0px 0px 7px #8c3c03;
+
+    cursor: pointer;
+
+    font-size: 14px;
+    color: white;
+    text-shadow: 0px -1px 0px #803703;
+
+    background: #bf5204;
+    background: -moz-linear-gradient(top, #f27d29 30%, #bf5204 80%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(30%,#f27d29), color-stop(80%,#bf5204));
+
+
+    -webkit-transition: all 0.1s linear;
+    -moz-transition: all 0.1s linear;
+    -o-transition: all 0.1s linear;
+    transition: all 0.1s linear;
+    z-index: 20000;
+}
+
+#btnGodmode:hover {
+    background: #d95d05;
+    background: -moz-linear-gradient(top, #ff842b 30%, #d95d05 80%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(30%,#ff842b), color-stop(80%,#d95d05));
+}
+
+
+#btnGodmode.suspended {
+    left: 0%;
+    border-radius: 0px 0px 7px 0px;
+    -moz-border-radius: 0px 0px 7px 0px;
+    -webkit-border-radius: 0px 0px 7px 0px;
+}
+
+#btnGodmode:after {
+    content: "You are god-like";
+}
+
+#btnGodmode.suspended:after {
+    content: "You are mortal";
+}

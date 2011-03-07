@@ -1,0 +1,52 @@
+Booot CMS v1.1 with News, Catalog and Shop modules
+Copyright © 2010—2011  Andrey Antonov
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+CONTACTS
+Andrey Antonov	http://dustweb.ru/ andreydust@gmail.com
+Booot site	http://booot.ru/
+Web Outsource	http://weboutsource.ru/
+
+
+
+Booot CMS v1.1 с модулями новостей, каталога и магазина
+Copyright © 2010—2011  Андрей Антонов
+
+Эта программа является свободным программным обеспечением. Вы можете
+распространять и/или модифицировать её согласно условиям Стандартной
+Общественной Лицензии GNU, опубликованной Фондом Свободного Программного
+Обеспечения, версии 2 или, по Вашему желанию, любой более поздней версии.
+
+Эта программа распространяется в надежде, что она будет полезной, но БЕЗ
+ВСЯКИХ ГАРАНТИЙ, в том числе подразумеваемых гарантий ТОВАРНОГО СОСТОЯНИЯ ПРИ
+ПРОДАЖЕ и ГОДНОСТИ ДЛЯ ОПРЕДЕЛЁННОГО ПРИМЕНЕНИЯ. Смотрите Стандартную
+Общественную Лицензию GNU для получения дополнительной информации.
+
+Вы должны были получить копию Стандартной Общественной Лицензии GNU вместе
+с программой. В случае её отсутствия, посмотрите <http://www.gnu.org/licenses/>.
+
+КОНТАКТЫ
+Андрей Антонов	http://dustweb.ru/ andreydust@gmail.com
+Сайт Booot	http://booot.ru/
+Web Outsource	http://weboutsource.ru/
+
+УСТАНОВКА
+http://booot.ru/wiki/%D0%A3%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0
+либо
+install.php
+
+ДОКУМЕНТАЦИЯ
+http://booot.ru/wiki/

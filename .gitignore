@@ -1,0 +1,10 @@
+data/
+*.swp
+.buildpath
+.project
+.settings/
+js/alljs.js
+js/alljs.js.gz
+css/allcss.css
+css/allcss.css.gz
+yandex.xml
