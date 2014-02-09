@@ -1,5 +1,5 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="<?php echo $sdir?>/images/favicon.ico">
+    <link rel="shortcut icon" href="<?php echo $sdir?>/images/favicon.png">
     <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow&amp;subset=cyrillic" rel="stylesheet" type="text/css">
 
     <!-- Bootstrap core CSS -->
