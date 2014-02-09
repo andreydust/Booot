@@ -3,13 +3,6 @@
 /**
  * Возвращает указанный шаблон с подставленными данными из $vars
  *
- * друзья мои, это самый быстрый, мощный,
- * гибкий и удобный шаблонизатор
- * всех времен и народов для PHP,
- * если есть альтернативное мнение,
- * не поленитесь, похоливарьте на
- * http://forum.dustweb.ru/
- *
  * @param string $name Имя шаблона из папки /templates
  * @param array $vars Массив переменных для шаблона
  * @return string
@@ -54,7 +47,7 @@ function tpl($name, $vars=array()) {
 		
 		//Находим и заменяем все «screen» css файлы на один сжатый
 		preg_match_all('/<link.*href.*=.*"(.*\.css[^"]*)".*media="screen".*>/i', $nocomment, $result, PREG_PATTERN_ORDER);
-		$allcssTime = @filemtime(DIR."/css/allcss.css");
+		$allcssTime = @filemtime(DIR.'/css/allcss_'.$GLOBALS['config']['site']['theme'].'.css');
 		if(!$allcssTime) $mustReBuild = true;
 		else $mustReBuild = false;
 		foreach ($result[1] as $csslink) {
@@ -65,7 +58,7 @@ function tpl($name, $vars=array()) {
 		if($mustReBuild) require_once DIR.'/system/lib/minifiers/cssmin.php';
 		$allcss = ''; $c=0; $tc = count($result[0]);
 		foreach ($result[0] as $k=>$linktag) {
-			if(++$c == $tc) $ret = str_replace($linktag, '<link href="/css/allcss.css" rel="stylesheet" type="text/css" media="screen" />', $ret);
+			if(++$c == $tc) $ret = str_replace($linktag, '<link href="/css/allcss_'.$GLOBALS['config']['site']['theme'].'.css" rel="stylesheet" type="text/css" media="screen" />', $ret);
 			else $ret = str_replace($linktag, '', $ret);
 			if($mustReBuild) {
 				$css = file_get_contents(DIR.$result[1][$k]);
@@ -84,17 +77,17 @@ function tpl($name, $vars=array()) {
 			}
 		}
 		if($mustReBuild) {
-			file_put_contents(DIR."/css/allcss.css", $allcss);
-			chmod(DIR."/css/allcss.css", 0755);
-			$gz = gzopen(DIR."/css/allcss.css.gz",'w9');
+			file_put_contents(DIR.'/css/allcss_'.$GLOBALS['config']['site']['theme'].'.css', $allcss);
+			chmod(DIR.'/css/allcss_'.$GLOBALS['config']['site']['theme'].'.css', 0755);
+			$gz = gzopen(DIR.'/css/allcss_'.$GLOBALS['config']['site']['theme'].'.css.gz','w9');
 			gzwrite($gz, $allcss);
 			gzclose($gz);
-			chmod(DIR."/css/allcss.css.gz", 0755);
+			chmod(DIR.'/css/allcss_'.$GLOBALS['config']['site']['theme'].'.css.gz', 0755);
 		}
 		
 		//Находим и заменяем все js файлы на один сжатый
 		preg_match_all('/<script.*src="(.*\.js[^"]*)".*>/i', $nocomment, $result, PREG_PATTERN_ORDER);
-		$alljsTime = @filemtime(DIR."/js/alljs.js");
+		$alljsTime = @filemtime(DIR.'/js/alljs_'.$GLOBALS['config']['site']['theme'].'.js');
 		if(!$alljsTime) $mustReBuild = true;
 		else $mustReBuild = false;
 		foreach ($result[1] as $jslink) {
@@ -105,7 +98,7 @@ function tpl($name, $vars=array()) {
 		if($mustReBuild) require_once DIR.'/system/lib/minifiers/jsmin.php';
 		$alljs = ''; $c=0; $tc = count($result[0]);
 		foreach ($result[0] as $k=>$scripttag) {
-			if(++$c == $tc) $ret = str_replace($scripttag, '<script type="text/javascript" src="/js/alljs.js"></script>', $ret);
+			if(++$c == $tc) $ret = str_replace($scripttag, '<script type="text/javascript" src="/js/alljs_'.$GLOBALS['config']['site']['theme'].'.js"></script>', $ret);
 			else $ret = str_replace($scripttag, '', $ret);
 			if($mustReBuild) {
 				$js = file_get_contents(DIR.$result[1][$k]);
@@ -113,12 +106,12 @@ function tpl($name, $vars=array()) {
 			}
 		}
 		if($mustReBuild) {
-			file_put_contents(DIR."/js/alljs.js", $alljs);
-			chmod(DIR."/js/alljs.js", 0755);
-			$gz = gzopen(DIR."/js/alljs.js.gz",'w9');
+			file_put_contents(DIR.'/js/alljs_'.$GLOBALS['config']['site']['theme'].'.js', $alljs);
+			chmod(DIR.'/js/alljs_'.$GLOBALS['config']['site']['theme'].'.js', 0755);
+			$gz = gzopen(DIR.'/js/alljs_'.$GLOBALS['config']['site']['theme'].'.js.gz','w9');
 			gzwrite($gz, $alljs);
 			gzclose($gz);
-			chmod(DIR."/js/alljs.js.gz", 0755);
+			chmod(DIR.'/js/alljs_'.$GLOBALS['config']['site']['theme'].'.js.gz', 0755);
 		}
 		
 		timegen('minify',1);

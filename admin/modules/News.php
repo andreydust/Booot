@@ -1,7 +1,7 @@
 <?php
 class News extends AdminModule {
 	
-	const name = 'Новости (пресс-центр)';
+	const name = 'Новости';
 	
 	const order = 8;
 	

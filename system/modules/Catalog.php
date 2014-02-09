@@ -131,11 +131,17 @@ class Catalog {
 			$curTopic = $curTopic['data'];
 			$curProduct = end($mpath);
 			if(is_numeric($curProduct)) {
-				$product_sql = "AND `id` = ".(int)$curProduct;
+				$product_sql = "AND p.`id` = ".(int)$curProduct;
 			} else {
-				$product_sql = "AND `nav` = '".q($curProduct)."'";
+				$product_sql = "AND p.`nav` = '".q($curProduct)."'";
 			}
-			$productData = db()->rows("SELECT * FROM `prefix_products` WHERE `deleted` = 'N' AND `show` = 'Y' AND `top` = ".(int)$curTopic['id']." $product_sql");
+			$productData = db()->rows("
+				SELECT p.*, b.name AS `brand_name`, t.singular_name AS `product_singular_name`
+				FROM `prefix_products` AS p
+				LEFT JOIN `prefix_products_brands` AS b ON b.id = p.brand
+				LEFT JOIN `prefix_products_topics` AS t ON t.id = p.top
+				WHERE p.`deleted` = 'N' AND p.`show` = 'Y' AND p.`top` = ".(int)$curTopic['id']." $product_sql
+			");
 			$productCount = count($productData);
 			if($productCount == 0) page404();
 			elseif($productCount > 1) $productData = current($productData);
@@ -181,25 +187,99 @@ class Catalog {
 	}
 	
 	
-	private function MainPage() {
+	public function MainPage() {
 		$this->SEO('content', $this->holder['id'], 'Content');
 		
-		return tpl('modules/'.__CLASS__.'/mainpage', array(
+		return tpl('modules/'.__CLASS__.'/mainPage', array(
 			'name'	=> $this->holder['name'],
 			'title'	=> isset($this->seo['title'])&&!empty($this->seo['title'])?$this->seo['title']:$this->holder['name'].' — '.$GLOBALS['config']['site']['title']
 		));
 	}
 	
+
+
+	/**
+	 * Блок каталога на главной странице в теме cloudyNoon
+	 */
+	public function MainPage_cloudyNoon() {
+		$mostPopularProducts =  array();
+
+		//Список всех категорий по родительским
+		$topicsByTop = $this->CatalogMenuTopics();
+
+		//Количества товаров в категориях
+		$productsCounts = db()->rows("
+			SELECT `top`, COUNT(*) AS 'count' FROM `prefix_products` WHERE `deleted` = 'N' AND `show` = 'Y'
+			GROUP BY `top`
+		", MYSQLI_ASSOC, 'top');
+
+		//Самые популярные товары в топовых категориях
+		function getChildIds($key, $topicsByTop, $findedKeys) {
+			if(is_array($topicsByTop[$key])) {
+				foreach ($topicsByTop[$key] as $ckey => $cvalue) {
+					$findedKeys[$ckey] = $ckey;
+					$findedKeys = array_merge($findedKeys, getChildIds($ckey, $topicsByTop, $findedKeys));
+				}
+			}
+			return array_unique($findedKeys);
+		}
+		foreach ($topicsByTop[0] as $key => $value) {
+			$mostPopularProducts[$key] = getChildIds($key, $topicsByTop, array());
+			$mostPopularProducts[$key][] = $key;
+		}
+		$rootTopicsSql = array();
+		foreach ($mostPopularProducts as $rootTopicId => $topicIds) {
+			$rootTopicsSql[] = "
+				(
+					SELECT p.id, p.top, p.rate, p.name AS pname, t.singular_name, b.name AS bname, $rootTopicId AS root
+					FROM `prefix_products` as p
+					LEFT JOIN `prefix_products_brands` AS b ON b.id = p.brand
+					INNER JOIN `prefix_products_topics` AS t ON t.id = p.top
+					WHERE p.`deleted` = 'N' AND p.`show` = 'Y' AND p.`is_exist` = 'Y' AND p.`top` IN (".implode(',', $topicIds).")
+					ORDER BY `rate` DESC
+					LIMIT 8
+				)
+			";
+		}
+		$rootTopicsSql = implode(' UNION ', $rootTopicsSql);
+		$products = db()->rows($rootTopicsSql, MYSQLI_ASSOC);
+		$productsByRoot = array();
+		foreach ($products as $product) {
+			$productsByRoot[$product['root']][$product['id']] = $product;
+			$productsByRoot[$product['root']][$product['id']]['link'] = $this->Link($product['top'], $product['id']);
+		}
+
+		return tpl('modules/'.__CLASS__.'/mainPageBlock', array(
+			'topicsByTop'		=> $topicsByTop,
+			'productsCounts'	=> $productsCounts,
+			'productsByRoot'	=> $productsByRoot
+		));
+	}
+
 	
 	/**
 	 * Меню каталога
 	 */
 	function Menu() {
+		
+		$topicsByTop = $this->CatalogMenuTopics();
+		
+		return tpl('modules/'.__CLASS__.'/menu', array(
+			'topics'	=> $topicsByTop
+		));
+	}
+
+
+	/**
+	 * Возвращает массив категрий сгруппированный по родительской категории
+	 */
+	private function CatalogMenuTopics() {
 		$counts_ = db()->rows("SELECT `top` , COUNT(`id`) AS `count` FROM `prefix_products` WHERE `deleted`='N' AND `show`='Y' GROUP BY `top`");
 		$counts = array();
 		foreach ($counts_ as $count) {
 			$counts[$count['top']] = $count['count'];
 		}
+
 		$active_ids = array();
 		if(!empty($this->path)) {
 			foreach ($this->path as $v) {
@@ -208,6 +288,7 @@ class Catalog {
 				}
 			}
 		}
+
 		$topics = $this->data->GetData('products_topics', "AND `show` = 'Y'");
 		$topicsByTop = array();
 		foreach ($topics as $v) {
@@ -226,10 +307,17 @@ class Catalog {
 			$topicsByTop[$v['top']][$v['id']] = $v;
 		}
 		unset($topics);
-		
-		return tpl('modules/'.__CLASS__.'/menu', array(
-			'topics'	=> $topicsByTop
-		));
+
+		return $topicsByTop;
+	}
+
+
+	/**
+	 * Возвращает массив топовых категрий для модуля контента (для генерации меню)
+	 */
+	public function SubMenu() {
+		$topicsByTop = $this->CatalogMenuTopics();
+		return $topicsByTop[0];
 	}
 	
 	
@@ -243,11 +331,16 @@ class Catalog {
 			$topics = $this->data->GetData('products_topics', "AND `show` = 'Y'");
 			
 			if($product_id !== 0) {
-				if($topic_id == 0) {
-					$product = $this->data->GetDataById('products', $product_id);
-					$topic_id = $product['top'];
+				//if($topic_id == 0) {
+				//	$product = $this->data->GetDataById('products', $product_id);
+				//	$topic_id = $product['top'];
+				//}
+				$product = $this->data->GetDataById('products', $product_id);
+				if(isset($product['nav']) && !empty($product['nav'])) {
+					$product_link = '/'.$product['nav'];
+				} else {
+					$product_link = '/'.$product_id;
 				}
-				$product_link = '/'.$product_id;
 			} else {
 				$product_link = '';
 			}
@@ -285,9 +378,13 @@ class Catalog {
 					break;
 				}
 				$link = '';
+				$name = $i['data']['name'];
 				if($i['type'] == 'topic') $link = $this->Link($i['data']['id']);
-				if($i['type'] == 'product') $link = $this->Link($i['data']['top'], $i['data']['id']);
-				$ret[] = array('name'=>$i['data']['name'], 'link'=>$link);
+				if($i['type'] == 'product') {
+					$name = $i['data']['product_singular_name'].' '.$i['data']['brand_name'].' '.$i['data']['name'];
+					$link = $this->Link($i['data']['top'], $i['data']['id']);
+				}
+				$ret[] = array('name'=>$name, 'link'=>$link);
 			}
 			return $ret;
 		} else return array();
@@ -383,8 +480,9 @@ class Catalog {
 		
 		//Товары
 		$products = $db->rows("
-			SELECT p.*, b.name AS `brand_name` FROM `prefix_products` AS p
+			SELECT p.*, b.name AS `brand_name`, t.singular_name AS `product_singular_name` FROM `prefix_products` AS p
 			LEFT JOIN `prefix_products_brands` AS b ON b.id = p.brand
+			LEFT JOIN `prefix_products_topics` AS t ON p.top = t.id
 			WHERE
 				p.`deleted` = 'N' AND
 				p.`show` = 'Y' AND
@@ -539,6 +637,8 @@ class Catalog {
 		$products = $products_paged['products'];
 		$paging = $products_paged['rendered'];
 		unset($products_paged);
+		if($_GET['page'] > 1) $addPageTitle = ' (страница '.abs((int)$_GET['page']).')';
+		else $addPageTitle = '';
 		
 		//Тайтл страницы (<head> <title>)
 		if(isset($this->seo['title'])&&!empty($this->seo['title'])) $head_title = $this->seo['title'];
@@ -553,9 +653,10 @@ class Catalog {
 			if(!empty($head_title)) $head_title[0] = $head_title[0].(empty($additional_brand_title)?'':' '.$additional_brand_title);
 			$head_title = implode(' — ', $head_title).' — '.$GLOBALS['config']['site']['title'];
 		}
+		$head_title = $head_title.$addPageTitle;
 		
 		//Финальные приготовления
-		$page_title = $this->topic['name'].(empty($additional_brand_title)?'':' '.$additional_brand_title);
+		$page_title = $this->topic['name'].(empty($additional_brand_title)?'':' '.$additional_brand_title).$addPageTitle;
 		$brand_price_link = getget(array('page'=>false,'brands'=>false,'PriceFromValue'=>false,'PriceToValue'=>false), 1);
 		//Подготавливаем картинки
 		foreach ($products as $product) $product_ids[] = $product['id'];
@@ -567,7 +668,23 @@ class Catalog {
 		 'name'	=> $this->holder['name'],
 			'title'	=> isset($this->seo['title'])&&!empty($this->seo['title'])?$this->seo['title']:$this->holder['name'].' — '.$GLOBALS['config']['site']['title']
 		 */
-		
+
+		//Вложенные категории
+		$subCats = $db->rows("
+			SELECT `id`, `name`, `anons` 
+			FROM `prefix_products_topics` 
+			WHERE `deleted` = 'N' AND `show` = 'Y' AND `top` = ".(int)$this->topic['id']."
+			ORDER BY `rate` DESC
+		", MYSQLI_ASSOC);
+		$productsCounts = db()->rows("
+			SELECT `top`, COUNT(*) AS 'count' FROM `prefix_products` WHERE `deleted` = 'N' AND `show` = 'Y'
+			GROUP BY `top`
+		", MYSQLI_ASSOC, 'top');
+		foreach ($subCats as $key => $subCat) {
+			$subCats[$key]['link'] = $this->Link($subCat['id']);
+			$subCats[$key]['productsCount'] = $productsCounts[$subCat['id']];
+		}
+
 		return tpl('modules/'.__CLASS__.'/list', array(
 			'title'			=> $head_title,
 			'name'			=> $page_title,
@@ -580,7 +697,8 @@ class Catalog {
 			'selection'		=> $selection,
 			
 			'products'		=> $products,
-			'paging'		=> $paging
+			'paging'		=> $paging,
+			'subCats'		=> $subCats
 		));
 	}
 	
@@ -1098,7 +1216,8 @@ class Catalog {
 		$products = array();
 		if(is_array($like) && !empty($like)) {
 			$products = db()->rows("
-				SELECT p.* FROM `prefix_products` AS p
+				SELECT p.*, b.name AS `brand_name`, t.singular_name AS `product_singular_name`
+				FROM `prefix_products` AS p
 				LEFT JOIN `prefix_products_topics` AS t ON t.id = p.top
 				LEFT JOIN `prefix_products_brands` AS b ON b.id = p.brand
 				WHERE p.`deleted` = 'N' AND p.`show` = 'Y' AND (".implode(' AND ', $like).")
@@ -1107,7 +1226,8 @@ class Catalog {
 			
 			if(count($products) == 0) {
 				$products = db()->rows("
-					SELECT p.* FROM `prefix_products` AS p
+					SELECT p.*, b.name AS `brand_name`, t.singular_name AS `product_singular_name`
+					FROM `prefix_products` AS p
 					LEFT JOIN `prefix_products_topics` AS t ON t.id = p.top
 					LEFT JOIN `prefix_products_brands` AS b ON b.id = p.brand
 					WHERE p.`deleted` = 'N' AND p.`show` = 'Y' AND (".implode(' OR ', $like).")
@@ -1164,6 +1284,7 @@ class Catalog {
 				'products_count'	=> $products_count,
 				'products_from'		=> $products_from + 1,
 				'products_to'		=> $products_onpage*$page_current>$products_count?$products_count:$products_onpage*$page_current,
+				'topicLink'			=> $this->Link($this->topic['id'])
 			));
 		}
 		
@@ -1437,8 +1558,9 @@ class Catalog {
 		
 		//Товар
 		$product = $db->query_first("
-			SELECT p.*, b.`name` AS `brand_name` FROM `prefix_products` AS p
+			SELECT p.*, b.`name` AS `brand_name`, t.singular_name AS `product_singular_name` FROM `prefix_products` AS p
 			LEFT JOIN `prefix_products_brands` AS b ON b.`id` = p.`brand`
+			LEFT JOIN `prefix_products_topics` AS t ON t.id = p.top
 			WHERE p.`deleted` = 'N' AND p.`show` = 'Y' AND p.`id` = ".$this->product['id']."
 		");
 		
@@ -1463,7 +1585,7 @@ class Catalog {
 		else {
 			$backpath = array_reverse($this->path);
 			$head_title = array();
-			$head_title[] = $product['brand_name'].' '.$product['name'];
+			$head_title[] = $product['product_singular_name'].' '.$product['brand_name'].' '.$product['name'];
 			foreach ($backpath as $i) {
 				if($i['type'] == 'topic') {
 					$head_title[] = $i['data']['name'];
@@ -1587,7 +1709,7 @@ class Catalog {
 		}
 		
 		//Финальные приготовления
-		$page_title = $product['brand_name'].' '.$product['name'];
+		$page_title = $product['product_singular_name'].' '.$product['brand_name'].' '.$product['name'];
 		//Разбиваем группы характеристик пополам
 		$groupTypeExplode = ceil(count($types)/2);
 		if(!empty($types)) {
@@ -1727,6 +1849,21 @@ class Catalog {
 		return $price;
 	}
 	
+	public function ajaxProductNameById() {
+		$productId = abs((int)$_GET['productId']);
+
+		$data = db()->query_first("
+			SELECT p.id, p.name, b.name AS brand_name, t.singular_name AS product_singular_name
+			FROM `prefix_products` AS p
+			LEFT JOIN `prefix_products_topics` AS t ON t.id = p.top
+			LEFT JOIN `prefix_products_brands` AS b ON b.id = p.brand
+			WHERE p.id = {$productId} AND p.deleted = 'N' AND p.show = 'Y' AND t.deleted = 'N' AND t.show = 'Y'
+		", MYSQLI_ASSOC);
+
+		return json_encode(array(
+			'productName'	=> $data['product_singular_name'].' '.$data['brand_name'].' '.$data['name']
+		));
+	}
 	
 }
 

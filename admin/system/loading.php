@@ -60,6 +60,6 @@ foreach($mods as $file) {
 ksort($modules);
 
 //Переопределяем конфиг
-@$GLOBALS['config']['site']['title']			= admGetSet('Blocks', 'site_title', $GLOBALS['config']['site']['title']);
-@$GLOBALS['config']['site']['admin_mail']		= admGetSet('Blocks', 'admin_mail', $GLOBALS['config']['site']['admin_mail']);
-@$GLOBALS['config']['site']['theme']			= admGetSet('Blocks', 'site_theme', $GLOBALS['config']['site']['theme']);
+//@$GLOBALS['config']['site']['title']			= admGetSet('Blocks', 'site_title', $GLOBALS['config']['site']['title']);
+//@$GLOBALS['config']['site']['admin_mail']		= admGetSet('Blocks', 'admin_mail', $GLOBALS['config']['site']['admin_mail']);
+//@$GLOBALS['config']['site']['theme']			= admGetSet('Blocks', 'site_theme', $GLOBALS['config']['site']['theme']);

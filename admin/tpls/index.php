@@ -52,10 +52,7 @@
 	</div>
 	
 	<div id="footer">
-		<span>© 2009—<?php echo date('Y')?>  —  <a href="http://booot.ru/" target="_blank">Booot</a></span>
-		<!--<span><a href="#">Помощь в работе с системой</a></span>-->
-		<span><a href="mailto:mail@weboutsource.ru?subject=От администратора <?php echo $_SERVER['SERVER_NAME']?> (Booot CMS)&body=Максимально полное описание проблемы или вопроса по работе Booot CMS на сайте <?php echo $_SERVER['SERVER_NAME']?>:%0A%0A" title="Если вы считаете что нашли ошибку в системе, просьба описать ее как можно подробнее">Письмо разработчикам</a></span>
-		<span><a href="http://weboutsource.ru/create-and-sell-ishop" target="_blank">Создание и продажа интернет-магазинов</a></span>
+		<span>© 2009&ndash;<?php echo date('Y')?>  —  <a href="http://booot.ru/" target="_blank">Booot</a></span>
 	</div>
 </body>
 </html>

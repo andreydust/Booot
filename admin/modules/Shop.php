@@ -62,7 +62,8 @@ class Shop extends AdminModule {
 						'order'		=> 'order'
 					),
 					'hide_from_table'=>true
-				)
+				),
+				'comment'	=> array('name' => 'Комментарий', 'hide_from_table'=>true)
 			), '', 'date');
 		} else {
 			$this->title = '<a href="'.$this->GetLink().'#open'.(int)$_GET['top'].'">Заказ №'.(int)$_GET['top'].'</a>';

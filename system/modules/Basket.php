@@ -7,7 +7,8 @@ class Basket {
 		'add'	=> array('method'=>'StaticAdd', 'name'=>'Добавить в корзину'),
 		'del'	=> array('method'=>'StaticDel', 'name'=>'Убрать из корзины'),
 		'edit'	=> array('method'=>'StaticEdit', 'name'=>'Редактировать количество'),
-		'thanks'	=> array('method'=>'ThanksPage', 'name'=>'Спасибо за заказ!')
+		'thanks'	=> array('method'=>'ThanksPage', 'name'=>'Спасибо за заказ!'),
+		'fastOrder'	=> array('method'=>'CloudyNoon_FastOrder', 'name'=>'Быстрый заказ')
 	);
 	
 	function __construct() {
@@ -67,11 +68,11 @@ class Basket {
 		}
 		
 		if(!empty($mlink) && empty($this->path)) page404();
-		
+
 		if(empty($this->path)) return false;
 		$check_alter = current($this->path);
 		if($check_alter['type'] == 'alter_page') {
-			return $this->$check_alter['method']();
+			return $this->{$check_alter['method']}();
 		} else return false;
 	}
 	
@@ -403,6 +404,120 @@ class Basket {
 		if(isset($_SESSION['orderComplete']) && empty($_SESSION['basket'])) {
 			return tpl('modules/'.__CLASS__.'/thanks');
 		} else page404();
+	}
+
+	private function CloudyNoon_FastOrder() {
+		$order['name']		= $_POST['name'];
+		$order['phone']		= $_POST['phone'];
+		$order['comment']	= $_POST['order'];
+		$order['productId']	= abs((int)$_POST['productId']);
+
+		$errors = array();
+		if(
+			empty($order['phone']) || 
+			(
+				empty($order['comment']) &&
+				$order['productId'] == 0
+			)
+		) {
+			$errors[] = 'Ошибка оформления, не заполнен телефон или данные о заказе';
+		}
+
+		if($order['productId'] != 0){
+			$product = db()->query_first("
+				SELECT p.*, b.name AS brand_name, t.singular_name AS `product_singular_name`
+				FROM `prefix_products` AS p
+				LEFT JOIN `prefix_products_topics` AS t ON t.id = p.top
+				LEFT JOIN `prefix_products_brands` AS b ON b.id = p.brand
+				WHERE p.`id` = {$order['productId']} AND p.`deleted` = 'N' AND p.`show` = 'Y'
+			");
+			if($product) {
+				$product['link'] = giveObject('Catalog')->Link($product['top'], $product['id']);
+			}
+
+			if(empty($order['comment']) && !$product) {
+				$errors[] = 'Состав заказа не определен';
+			}
+		}
+		
+		//Можно оформлять
+		if(empty($errors)) {
+			$db = db();
+			//Статус для нового заказа
+			$newstatus = $db->query_first("SELECT `id` FROM `prefix_shop_statuses` WHERE `type` = 'New'");
+
+			//Записываем заказ
+			$db->query("INSERT INTO `prefix_shop_orders` (`name`,`phone`,`date`,`paymethod`,`status`,`comment`) VALUE (
+				'".q($order['name'])."',
+				'".q($order['phone'])."',
+				NOW(),
+				0,
+				".$newstatus['id'].",
+				'".q($order['comment'])."'
+			)");
+
+			$order['id'] = $db->last_insert_id();
+
+			if($product) {
+				$db->query("
+					INSERT INTO `prefix_shop_orders_items` (
+						`product`,
+						`order`,
+						`name`,
+						`link`,
+						`top`,
+						`brand`,
+						`price`,
+						`count`,
+						`created`,
+						`modified`
+					) VALUE (
+						$product[id],
+						$order[id],
+						'".q($product['singular_name'].' '.$product['brand_name'].' '.$product['name'])."',
+						'".q($product['link'])."',
+						$product[top],
+						".($product['brand']?$product['brand']['id']:0).",
+						'$product[price]',
+						1,
+						'$product[created]',
+						'$product[modified]'
+					)
+				");
+			}
+
+			//Отправляем на почту уведомление о заказе
+			$toMail = getSet('Shop', 'notify_mail', $GLOBALS['config']['site']['admin_mail']);
+			if(!empty($toMail)) {
+				$body  = "№ заказа: ".$order['id']."\r\n";
+				$body .= "Имя: ".$order['name']."\r\n";
+				$body .= "Телефон: ".$order['phone']."\r\n";
+				$body .= "Комментарий: ".$order['comment']."\r\n";
+				$body .= "IP: ".$_SERVER['REMOTE_ADDR']."\r\n";
+				$body .= "Карточка заказа: http://".$_SERVER['SERVER_NAME']."/admin/?module=Shop&method=Info#open".$order['id']." \r\n";
+				$body .= "Список товаров заказа: http://".$_SERVER['SERVER_NAME']."/admin/?module=Shop&method=Info&top=".$order['id']." \r\n";
+				$body .= "\r\nЗаказ:\r\n";
+				$body .=
+						$product['singular_name'].' '.$product['brand_name'].' '.$product['name'].
+						'(http://'.$_SERVER['SERVER_NAME'].$product['link'].') '.
+						number_format($product['price'], 0, '', ' ')." руб.\r\n";
+				$body .= "\r\n";
+				$body .= 'К заказу '.$totals['count'].' '.plural($totals['count'], 'товаров', 'товар', 'товара').' на сумму '.number_format($totals['summ'], 0, '', ' ').' '.plural($totals['summ'], 'рублей', 'рубль', 'рубля');
+				$mail = new ZFmail($toMail, 'noreply@'.$_SERVER['SERVER_NAME'], 'Заказ с сайта '.$_SERVER['SERVER_NAME'], $body);
+				$mail->send();
+			}
+
+			$_SESSION['orderComplete'] = true;
+
+			header('Location: '.linkByModule('Basket').'/thanks');
+		} else {
+			return '
+			<p>При оформлении заказа произошли ошибки</p>
+			<ul>
+				<li>'.implode('</li><li>', $errors).'</li>
+			</ul>
+			';
+		}
 	}
 	
 	/*

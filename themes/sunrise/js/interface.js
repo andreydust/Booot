@@ -397,4 +397,7 @@ $(function(){
 		$(this).css('visibility', 'hidden');
 	});
 
+
+	if(typeof(hideTraps) != 'undefined') hideTraps();
+
 });

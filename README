@@ -1,5 +1,5 @@
 Booot CMS v1.1 with News, Catalog and Shop modules
-Copyright © 2010—2011  Andrey Antonov
+Copyright © 2010—2014  Andrey Antonov
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ Web Outsource	http://weboutsource.ru/
 
 
 Booot CMS v1.1 с модулями новостей, каталога и магазина
-Copyright © 2010—2011  Андрей Антонов
+Copyright © 2010—2014  Андрей Антонов
 
 Эта программа является свободным программным обеспечением. Вы можете
 распространять и/или модифицировать её согласно условиям Стандартной
@@ -45,8 +45,6 @@ Web Outsource	http://weboutsource.ru/
 
 УСТАНОВКА
 http://booot.ru/wiki/%D0%A3%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0
-либо
-install.php
 
 ДОКУМЕНТАЦИЯ
 http://booot.ru/wiki/

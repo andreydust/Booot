@@ -10,12 +10,12 @@
 	<!-- Fonts and controls -->
 	<link href="<?php echo $sdir?>/css/typo.css" rel="stylesheet" type="text/css" media="screen" />
 	<!-- Auto Forms -->
-	<link href="/css/autoforms.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="<?php echo $sdir?>/css/autoforms.css" rel="stylesheet" type="text/css" media="screen" />
 	<!-- Comments CSS -->
-	<link href="/css/comments.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="<?php echo $sdir?>/css/comments.css" rel="stylesheet" type="text/css" media="screen" />
 
 	<!-- Godmode CSS -->
-	<link href="/css/godmode.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="<?php echo $sdir?>/css/godmode.css" rel="stylesheet" type="text/css" media="screen" />
 	<!-- Fancy Box -->
 	<link href="/js/fancybox/jquery.fancybox-1.3.4.css" rel="stylesheet" type="text/css" media="screen" />
 	

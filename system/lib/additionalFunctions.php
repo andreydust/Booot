@@ -155,7 +155,9 @@ function getget($param=array(), $not_complete=false) {
 	}
 	
 	$query = http_build_query($get,'','&amp;');
-	return ($not_complete?'':'?').$query;
+	$return = ($not_complete?'':'?').$query;
+	if($return == '?') return '';
+	else return $return;
 }
 
 

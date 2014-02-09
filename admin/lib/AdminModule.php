@@ -46,6 +46,9 @@ class AdminModule {
 		$this->called_class = get_called_class();
 		$this->tpls = 'modules/'.__CLASS__.'/';
 		$this->db = db();
+
+		//Вызов дополнительного конструктора в модуле
+		if(method_exists($this, 'Construct')) $this->Construct();
 		
 		//Вдруг у модуля есть настройки
 		$this->db->query("SELECT * FROM `prefix_settings` WHERE `module` = '".$this->called_class."'");

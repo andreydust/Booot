@@ -168,15 +168,18 @@ class Catalog extends AdminModule {
 							'size'		=> 5
 						)
 					),
-					'rate' 		=> array('name' => 'Рейтинг (количество просмотров)')
+					'rate' 			=> array('name' => 'Рейтинг (количество просмотров)'),
+					'singular_name'	=> array('name' => 'Наименование в единственном числе'),
+					'text'			=> array('name' => 'Описание'),
+					'anons'			=> array('name' => 'Краткое описание')
 				)
 			);
 		}
 	}
 	
 	function Brands() {
-			$this->title = 'Бренды';
-			$this->content = $this->DataTableAdvanced('products_brands',array(
+		$this->title = 'Бренды';
+		$this->content = $this->DataTableAdvanced('products_brands',array(
 				//Имена системных полей
 				'nouns'	=> array(
 					'id'		=> 'id',		// INT

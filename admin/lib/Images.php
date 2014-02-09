@@ -101,7 +101,7 @@ class Images {
 	}
 	
 	function GetImages($module, $module_id) {
-		return db()->rows("SELECT * FROM prefix_images WHERE module = '{$module}' AND ((module_id = '{$module_id}' AND module_id != 0) OR (alter_key = '{$module_id}' AND alter_key != ''))");
+		return db()->rows("SELECT * FROM prefix_images WHERE module = '{$module}' AND ((module_id = '{$module_id}' AND module_id != 0) OR (alter_key = '{$module_id}' AND alter_key != '')) ORDER BY `main`");
 	}
 	
 	function GetMainImage($module, $module_id) {

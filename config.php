@@ -9,7 +9,7 @@ $GLOBALS['config']['develop'] = true;
 $GLOBALS['config']['db'] = array(
 	'server'				=> 'localhost',
 	'user'					=> 'booot',
-	'password'				=> 'mysecretpass',
+	'password'				=> '',
 	'db'					=> 'booot',
 	'prefix'				=> 'bm_',
 	'set_names_utf8'		=> true,
@@ -30,8 +30,8 @@ $GLOBALS['config']['msg'] = array(
 
 $GLOBALS['config']['site'] = array(
 	'title'			=> 'Booot Free',
-	'admin_mail'	=> '',
-	'theme'			=> 'sunrise'
+	'admin_mail'	=> 'andreydust@gmail.com',
+	'theme'			=> 'cloudyNoon'
 );
 
 $GLOBALS['config']['jabber'] = array(

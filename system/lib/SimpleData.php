@@ -75,7 +75,7 @@ class SimpleData {
 		
 		$sql = 'SELECT * FROM `prefix_'.$table.'` WHERE 1 '.$where_deleted.' '.$where_filter.' '.$static_filter.' '.$order.' '.$limit_filter;
 		$db->query($sql);
-		while($i = $db->fetch()){
+		while($i = $db->fetch(MYSQL_ASSOC)){
 			if(isset($field_id)) $this->data[$table]['data'][$i[$field_id]] = $i;
 			else $this->data[$table]['data'][] = $i;
 		}

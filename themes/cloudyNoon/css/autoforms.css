@@ -1,0 +1,22 @@
+.autoform {
+	background:#253146;
+	border:solid 1px #080808;
+	padding:20px 18px 16px 18px;
+	margin:0 0 2em 0;
+	border-radius: 2px;
+	overflow:hidden;
+	color:#fff;
+	max-width: 600px;
+	width: 100%;
+}
+.autoform h2 { margin: 0; }
+.autoform label { display: block; margin: 1em 0 .1em .4em; font-weight: normal; }
+.autoform input,.autoform textarea { }
+.autoform textarea { height: 6.1em; }
+.autoform .autoformCheckbox { margin:1em 0 .3em; }
+.autoform .autoformCheckbox input { display: inline !important; width:auto; margin: 0 0 0 0; vertical-align: middle; }
+.autoform .autoformCheckbox label { display: inline !important; width:auto; }
+.autoform button { display: block; margin: 1.5em 0 .3em; }
+.autoform .required { }
+.autoform .jep { color:red; }
+.autoform .requiredHint { margin:1.5em 0 0 0; }

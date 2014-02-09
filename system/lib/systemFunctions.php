@@ -53,7 +53,7 @@ $blocksByCallname = $blocksById = array();
  * @param int $id ID блока
  * @param bool $return Вернуть вызвавшему, иначе echo
  */
-function block($id, $return=false) {
+function block($id, $return=false, $adminEditableInline=false) {
 	global $blocksByCallname, $blocksById;
 	if(empty($blocksByCallname)) {
 		$blocks = $GLOBALS['data']->GetData('blocks');
@@ -73,7 +73,7 @@ function block($id, $return=false) {
 	
 	//Если админ
 	if (!session_id()) session_start();
-	if(isset($_SESSION['user']['type'])) {
+	if(isset($_SESSION['user']['type']) && !$return) {
 		$is_admin = ($_SESSION['user']['type'] == 'a');
 		if($is_admin && @!$_SESSION['godmode_suspended']) {
 			//Если html содержимое
@@ -82,7 +82,13 @@ function block($id, $return=false) {
 			} else {
 				$edit_block_link = '/admin/?module=Blocks#open'.$block['id'];
 			}
-			$block['text'] = '<div style="border:dashed 1px grey; position:relative;">'.$block['text'].'<a target="_blank" style="position:absolute; top:0; right:-8px; z-index:100;" href="'.$edit_block_link.'" title="Редактировать"><img src="/admin/images/icons/pencil.png" alt="Редактировать" /></a></div>';
+			$block['text'] = 
+				'<div style="border:dashed 1px grey; position:relative; '.($adminEditableInline?'display:inline-block;':'').'">
+					'.$block['text'].'
+					<a target="_blank" style="position:absolute; top:0; right:-8px; z-index:100;" href="'.$edit_block_link.'" title="Редактировать">
+						<img src="/admin/images/icons/pencil.png" alt="Редактировать" />
+					</a>
+				</div>';
 		}
 	}
 	
@@ -204,7 +210,7 @@ function form($id, $return=false) {
 				}
 				$html .= '
 					<label for="autoform_'.$field['name'].'" class="'.$required.'">'.$field['label'].($required?' <span class="jep">*</span>':'').'</label>
-					<input type="text" name="'.$field['name'].'" id="autoform_'.$field['name'].'" value="'.$value.'" />
+					<input type="text" name="'.$field['name'].'" id="autoform_'.$field['name'].'" value="'.$value.'" class="form-control" />
 				';
 				if(!empty($required)) {
 					$js .= '
@@ -222,7 +228,7 @@ function form($id, $return=false) {
 				}
 				$html .= '
 					<label for="autoform_'.$field['name'].'" class="'.$required.'">'.$field['label'].($required?' <span class="jep">*</span>':'').'</label>
-					<textarea name="'.$field['name'].'" id="autoform_'.$field['name'].'">'.$value.'</textarea>
+					<textarea name="'.$field['name'].'" id="autoform_'.$field['name'].'" class="form-control">'.$value.'</textarea>
 				';
 				if(!empty($required)) {
 					$js .= '
@@ -264,11 +270,11 @@ function form($id, $return=false) {
 		}
 	}
 	$html = '
-	<div class="autoform" id="autoform'.$form['id'].'">
+	<div class="autoform form-group" id="autoform'.$form['id'].'">
 		<h2>'.$form['name'].'</h2>
 		<form method="post" action="">
 			'.$html.'
-			<button type="submit">Отправить</button>
+			<button type="submit" class="btn btn-default c-btn-large">Отправить</button>
 			
 			'.($requiredCount>0?'
 				<div class="requiredHint"><span class="jep">*</span> — '.($requiredCount==1?'поле обязательно':'поля обязательны').' для заполнения</div>
@@ -279,10 +285,12 @@ function form($id, $return=false) {
 	
 	$html .= '
 	<script type="text/javascript">
+	function hideTraps() {
 		'.$as_js.'
 		$("#autoform'.$form['id'].'").submit(function(){
 			'.$js.'
 		});
+	}
 	</script>
 	';
 	

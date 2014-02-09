@@ -106,11 +106,10 @@ class MySQL {
 	/**
 	 * query first row
 	 */
-	function query_first($query)
+	function query_first($query, $result_type=MYSQL_BOTH)
 	{
 		if ($this->query($query)) {
-			$row = $this->fetch();
-			//mysql_free_result($this->queryResult);
+			$row = $this->fetch($result_type);
 			mysqli_free_result($this->queryResult);
 			return $row;
 		}

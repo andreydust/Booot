@@ -42,8 +42,3 @@ foreach($mods as $file) {
 
 //Определение некоторых глобальных переменных
 $GLOBALS['head_add'] = '';
-
-//Переопределяем конфиг
-@$GLOBALS['config']['site']['title']			= getSet('Blocks', 'site_title', $GLOBALS['config']['site']['title']);
-@$GLOBALS['config']['site']['admin_mail']		= getSet('Blocks', 'admin_mail', $GLOBALS['config']['site']['admin_mail']);
-@$GLOBALS['config']['site']['theme']			= getSet('Blocks', 'site_theme', $GLOBALS['config']['site']['theme']);

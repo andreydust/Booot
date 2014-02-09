@@ -1,11 +1,12 @@
 <?php
-//vim:ts=4:sw=4:noet
 
 class Content {
 	
 	private $table = 'content';
 	
 	private $current_document;
+
+	private $menuCache = array();
 	
 	function __construct() {
 		$this->current_document = end($GLOBALS['path']);
@@ -46,6 +47,22 @@ class Content {
 			$this->seo['title'] = $this->current_document['name'].' — '.$GLOBALS['config']['site']['title'];
 		}
 	}
+
+	function PromoSlider() {
+		$slides = $GLOBALS['data']->GetData('cloudynoon_banner', "AND `show` = 'Y'");
+
+		foreach ($slides as $key => $slide) {
+			$img = img()->GetMainImage('CloudyNoonBanner', $slide['id']);
+			if(empty($img)) unset($slides[$key]);
+			else {
+				$slides[$key]['image'] = $img['src'];
+			}
+		}
+		
+		return tpl('parts/promoSlider', array(
+			'slides'	=> $slides
+		));
+	}
 	
 	function MainMenu() {
 		$pages = $GLOBALS['data']->GetData($this->table, "AND `show` = 'Y'");
@@ -60,20 +77,19 @@ class Content {
 				$activeSet = true;
 			}
 			else $i['active'] = false;
-			
+			unset($i['text']);
 			$menuByTop[$i['top']][] = $i;
 		}
 		
 		if(empty($menuByTop[0])) return tpl('parts/mainmenu', array('menu'=>array()));
 		
-		//if(!$activeSet) $menuByTop[0][0]['active'] = true;
-		
 		foreach($menuByTop[0] as $top=>$i) {
+			$i['link'] = linkById($i['id']);
 			$item['root'] = $i;
 			$item['sub'] = array();
 			
 			//Проверка на подменю из модуля
-			if(!empty($i['module']) && $i['active']) {
+			if(!empty($i['module'])) {
 				$obj = giveObject($i['module']);
 				if(method_exists($obj, 'SubMenu')) {
 					$item['sub'] = $obj->SubMenu();
@@ -81,17 +97,21 @@ class Content {
 			} else {
 				if(isset($menuByTop[$i['id']]))
 				foreach($menuByTop[$i['id']] as $id=>$j) {
+					$j['link'] = linkById($j['id']);
 					$item['sub'][] = $j;
 				}
 			}
 			
 			$menu[] = $item;
 		}
-		
+
+		$this->menuCache = $menu;
+
 		return tpl('parts/mainmenu', array('menu'=>$menu));
 	}
 	
 	
+
 	function SubMenu($id=0) {
 		
 		if($id != 0) {
@@ -140,6 +160,14 @@ class Content {
 		
 		return tpl('parts/submenu', array('menu'=>$menu, 'toppage'=>$toppage, 'activeSet'=>$activeSet));
 	}
+
+
+
+	function FooterMenu() {
+		return tpl('parts/footerMenu', array('menu' => $this->menuCache));
+	}
+
+
 	
 	/**
 	 * Перезвон
