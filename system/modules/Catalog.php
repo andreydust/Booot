@@ -207,6 +207,8 @@ class Catalog {
 		//Список всех категорий по родительским
 		$topicsByTop = $this->CatalogMenuTopics();
 
+		if(!isset($topicsByTop[0])) return;
+
 		//Количества товаров в категориях
 		$productsCounts = db()->rows("
 			SELECT `top`, COUNT(*) AS 'count' FROM `prefix_products` WHERE `deleted` = 'N' AND `show` = 'Y'
