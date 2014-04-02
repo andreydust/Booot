@@ -92,10 +92,14 @@ address { margin: 0; }
 /* кастомные стили */
 .c-img-catalog-item { text-align: left; display: block; }
 .c-img-catalog-item img {  }
-.c-catalog-list { list-style: none; margin: 0; padding: 0; }
+.c-catalog-list { list-style: none; margin: 1em 0 0 0; padding: 0; }
+@media screen and (max-width: 767px) { .c-catalog-list { margin-top: 0; } }
+.c-catalog-list-desc { margin-top:2em; }
 .c-btn-large { font-size: 21px; font-weight: normal; padding: .4em 1em; }
 .c-footer-block { margin-bottom: 20px; }
 .c-catalog-list li { margin-bottom: .6em; }
+.c-catalog-list-num { text-decoration: none; display: inline-block; color:#999; margin-left: .3em; font-size: 14px; }
+a:hover > .c-catalog-list-num { color:#666; }
 @media screen and (max-width: 767px) { .c-img-catalog-item { margin-bottom: .6em; } }
 .c-catalog-top { margin-top: 30px; }
 .c-catalog-item-img { margin-top: 32px; }

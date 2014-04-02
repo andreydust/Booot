@@ -11,10 +11,11 @@
 						if(++$leftOrRight%2) {
 							echo tpl('modules/Catalog/mainPageItem', array(
 								'topic'				=> $topic,
-								'productsByRoot'	=> $productsByRoot,
+								'topImages'			=> $topImages,
 								'top'				=> $top,
 								'productsCounts'	=> $productsCounts,
-								'topicsByTop'		=> $topicsByTop
+								'topicsByTop'		=> $topicsByTop,
+								'productsByRoot'	=> $productsByRoot
 							));
 						}
 					}
@@ -30,10 +31,11 @@
 						if(++$leftOrRight%2==0) {
 							echo tpl('modules/Catalog/mainPageItem', array(
 								'topic'				=> $topic,
-								'productsByRoot'	=> $productsByRoot,
+								'topImages'			=> $topImages,
 								'top'				=> $top,
 								'productsCounts'	=> $productsCounts,
-								'topicsByTop'		=> $topicsByTop
+								'topicsByTop'		=> $topicsByTop,
+								'productsByRoot'	=> $productsByRoot
 							));
 						}
 					}

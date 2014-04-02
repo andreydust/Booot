@@ -7,8 +7,8 @@
             <input type="text" class="form-control" id="OrderFormName" placeholder="Ваше имя" name="name">
           </div>
           <div class="form-group">
-            <label class="sr-only" for="OrderFormPhone">Номер телефона</label>
-            <input type="tel" class="form-control" id="OrderFormPhone" placeholder="Номер телефона" name="phone">
+            <label class="sr-only" for="OrderFormPhone">Телефон или email</label>
+            <input type="tel" class="form-control" id="OrderFormPhone" placeholder="Телефон или email" name="phone">
           </div>
           <div class="form-group">
             <label class="sr-only" for="OrderFormOrder">Название товара, услуги и комментарий к заказу</label>

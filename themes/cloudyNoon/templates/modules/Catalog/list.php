@@ -83,6 +83,8 @@
 			?>
 
 			<?=$paging?>
+
+			<?=empty($text)?'':'<div class="c-catalog-list-desc">'.$text.'</div>'?>
 			
 		</section>
 

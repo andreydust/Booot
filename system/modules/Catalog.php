@@ -215,36 +215,31 @@ class Catalog {
 			GROUP BY `top`
 		", MYSQLI_ASSOC, 'top');
 
-		//Самые популярные товары в топовых категориях
-		function getChildIds($key, $topicsByTop, $findedKeys) {
-			if(is_array($topicsByTop[$key])) {
-				foreach ($topicsByTop[$key] as $ckey => $cvalue) {
-					$findedKeys[$ckey] = $ckey;
-					$findedKeys = array_merge($findedKeys, getChildIds($ckey, $topicsByTop, $findedKeys));
-				}
-			}
-			return array_unique($findedKeys);
-		}
-		foreach ($topicsByTop[0] as $key => $value) {
-			$mostPopularProducts[$key] = getChildIds($key, $topicsByTop, array());
-			$mostPopularProducts[$key][] = $key;
-		}
-		$rootTopicsSql = array();
-		foreach ($mostPopularProducts as $rootTopicId => $topicIds) {
-			$rootTopicsSql[] = "
-				(
-					SELECT p.id, p.top, p.rate, p.name AS pname, t.singular_name, b.name AS bname, $rootTopicId AS root
-					FROM `prefix_products` as p
-					LEFT JOIN `prefix_products_brands` AS b ON b.id = p.brand
-					INNER JOIN `prefix_products_topics` AS t ON t.id = p.top
-					WHERE p.`deleted` = 'N' AND p.`show` = 'Y' AND p.`is_exist` = 'Y' AND p.`top` IN (".implode(',', $topicIds).")
-					ORDER BY `rate` DESC
-					LIMIT 8
-				)
-			";
-		}
-		$rootTopicsSql = implode(' UNION ', $rootTopicsSql);
-		$products = db()->rows($rootTopicsSql, MYSQLI_ASSOC);
+		//Картинки из товаров к категориям
+		$topImagesRows = db()->rows("
+			SELECT p.top, p.id
+			FROM
+			(
+				SELECT `top`, MAX(`rate`) AS `max_rate`
+				FROM `bm_products` 
+				GROUP BY `top`
+			) AS r 
+			LEFT JOIN `bm_products` AS p ON p.top = r.top AND p.`rate` = r.`max_rate`
+			GROUP BY p.`top`
+		", MYSQLI_ASSOC, 'top');
+		$topImages = array();
+		foreach ($topImagesRows as $key => $value) $topImages[$key] = $value['id'];
+		img()->PrepareImages('Catalog', $topImages);
+
+		//Товары в корневых категориях
+		$products = db()->rows("
+			SELECT p.id, p.top, p.rate, p.name AS pname, t.singular_name, b.name AS bname, p.top AS root
+			FROM `prefix_products` as p
+			LEFT JOIN `prefix_products_brands` AS b ON b.id = p.brand
+			INNER JOIN `prefix_products_topics` AS t ON t.id = p.top
+			WHERE p.`deleted` = 'N' AND p.`show` = 'Y' AND p.`is_exist` = 'Y' AND p.`top` IN (".implode(',', array_keys($topicsByTop[0])).")
+			ORDER BY `rate` DESC
+		", MYSQLI_ASSOC);
 		$productsByRoot = array();
 		foreach ($products as $product) {
 			$productsByRoot[$product['root']][$product['id']] = $product;
@@ -254,6 +249,7 @@ class Catalog {
 		return tpl('modules/'.__CLASS__.'/mainPageBlock', array(
 			'topicsByTop'		=> $topicsByTop,
 			'productsCounts'	=> $productsCounts,
+			'topImages'			=> $topImages,
 			'productsByRoot'	=> $productsByRoot
 		));
 	}
@@ -695,12 +691,13 @@ class Catalog {
 			'brand_price_link'	=> $brand_price_link,
 			'slider_vals'	=> $slider_vals,
 			'exist'			=> $this->productsFilter['exist'],
-		
+
 			'selection'		=> $selection,
 			
 			'products'		=> $products,
 			'paging'		=> $paging,
-			'subCats'		=> $subCats
+			'subCats'		=> $subCats,
+			'text'			=> $this->topic['text']
 		));
 	}
 	
