@@ -120,6 +120,8 @@ a:hover > .c-catalog-list-num { color:#666; }
 .c-product-table th { background: #253146; color:#fff; }
 .c-product-table td { background: #fff; }
 .c-product-image { margin-bottom: 1em; }
+.c-catalog-incat-list-num { text-decoration: none; display: inline-block; color:#999; margin-left: .3em; font-size: 19px; }
+a:hover > .c-catalog-incat-list-num { color:#666; }
 
 
 .nowrap { white-space: nowrap; }

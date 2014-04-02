@@ -27,7 +27,7 @@
 				foreach ($subCats as $key => $subCat) {
 					?>
 					<div class="col-md-6">
-						<p class="lead"><a href="<?=$subCat['link']?>"><?=$subCat['name']?></a> (<?=(int)$subCat['productsCount']['count']?>)</p>
+						<p class="lead"><a href="<?=$subCat['link']?>"><?=$subCat['name']?><span class="c-catalog-incat-list-num">(<?=(int)$subCat['productsCount']['count']?>)</span></a></p>
 						<p><?=$subCat['anons']?></p>
 					</div>
 					<?
