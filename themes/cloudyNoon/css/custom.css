@@ -102,8 +102,9 @@ address { margin: 0; }
 a:hover > .c-catalog-list-num { color:#666; }
 @media screen and (max-width: 767px) { .c-img-catalog-item { margin-bottom: .6em; } }
 .c-catalog-top { margin-top: 30px; }
-.c-catalog-item-img { margin-top: 32px; }
+.c-catalog-item-img img { margin: 32px 0 auto auto; }
 .c-description-text { margin-top: 50px; }
+.c-catalog-item-desc-6 { padding-right: 0; }
 .c-product-page { margin-top: 50px; }
 .c-product-types { background: #dcedff; padding:30px; }
 .c-product-types h2 { margin-top: 0; margin-bottom: 20px }
@@ -123,10 +124,15 @@ a:hover > .c-catalog-list-num { color:#666; }
 .c-catalog-incat-list-num { text-decoration: none; display: inline-block; color:#999; margin-left: .3em; font-size: 19px; }
 a:hover > .c-catalog-incat-list-num { color:#666; }
 .c-product-price-block { margin:1.5em 0 0 0; }
-.c-product-price { font-size:36px; letter-spacing: -2px; font-weight: bold; line-height: 30px; text-shadow: 0 0 5px #FFFFFF, 0 0 5px #FFFFFF; }
+.c-product-price { font-size:36px; letter-spacing: -2px; font-weight: bold; line-height: 30px; text-shadow: 0 0 5px #FFFFFF, 0 0 5px #FFFFFF; white-space: nowrap; }
 .c-product-price-old { font-size: 19px; text-decoration: line-through; color:#666; }
 .c-product-status {  }
 .c-product-status-notexist { font-size: 24px; color:#666; }
+.c-price-inlist .c-product-price-block { margin-top: 1.9em; }
+.c-price-inlist .c-product-price { font-size: 26px; letter-spacing: -1px; }
+@media screen and (max-width: 767px) { .c-price-inlist .c-product-price { font-size: 20px; } }
+.c-price-inlist .c-product-price-old { font-size: 18px; }
+.c-price-inlist .c-product-status-notexist { font-size: 18px; }
 
 
 .nowrap { white-space: nowrap; }

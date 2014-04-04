@@ -60,7 +60,7 @@
 								<div>
 									<span class="c-product-price"><?=number_format($product['price'], 0, '', ' ')?> ₷</span>
 									<div class="c-product-status">
-										Есть в наличии
+										В наличии
 									</div>
 								</div>
 							<?} else {?>
