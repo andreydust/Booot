@@ -122,6 +122,11 @@ a:hover > .c-catalog-list-num { color:#666; }
 .c-product-image { margin-bottom: 1em; }
 .c-catalog-incat-list-num { text-decoration: none; display: inline-block; color:#999; margin-left: .3em; font-size: 19px; }
 a:hover > .c-catalog-incat-list-num { color:#666; }
+.c-product-price-block { margin:1.5em 0 0 0; }
+.c-product-price { font-size:36px; letter-spacing: -2px; font-weight: bold; line-height: 30px; text-shadow: 0 0 5px #FFFFFF, 0 0 5px #FFFFFF; }
+.c-product-price-old { font-size: 19px; text-decoration: line-through; color:#666; }
+.c-product-status {  }
+.c-product-status-notexist { font-size: 24px; color:#666; }
 
 
 .nowrap { white-space: nowrap; }

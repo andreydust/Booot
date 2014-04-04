@@ -7,7 +7,7 @@ $(function(){
 		$.getJSON('/Catalog/ProductNameById', {'productId':id}, function(data){
 			$('#OrderFormOrder').val(data.productName);
 			$('#OrderFormProductId').val(id);
-			$('#OrderFormName').focus();
+			$('#OrderFormPhone').focus();
 		});
 
 		return false;
@@ -16,7 +16,7 @@ $(function(){
 	$('#FastOrderForm').submit(function(){
 		var error = false;
 		if($('#OrderFormPhone').val() == '') {
-			$('#OrderFormPhone').tooltip({'title':'Заполните номер телефона', 'trigger':'manual'});
+			$('#OrderFormPhone').tooltip({'title':'Заполните номер вашего телефона', 'trigger':'manual'});
 			$('#OrderFormPhone').tooltip('show');
 			$('#OrderFormPhone').focus();
 			$('#OrderFormPhone').blur(function(){

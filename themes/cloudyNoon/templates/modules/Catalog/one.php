@@ -48,9 +48,45 @@
 				<div class="col-sm-8">
 					<div class="c-product-types">
 						<?=$product['anons']?>
-						<div class="c-product-order">
-							<button type="button" class="btn btn-default c-btn-large orderButton" data-product-id="<?=$product['id']?>">Сделать заказ</button>
-						</div>
+
+						<?if($product['price'] > 0) {?>
+							<div class="c-product-price-block">
+							<?if($product['is_exist'] == 'Y') {?>
+								<?if($product['price'] < $product['priceOld']) {?>
+									<div class="c-product-price-old">
+										<?=number_format($product['priceOld'], 0, '', ' ')?> ₷
+									</div>
+								<?}?>
+								<div>
+									<span class="c-product-price"><?=number_format($product['price'], 0, '', ' ')?> ₷</span>
+									<div class="c-product-status">
+										Есть в наличии
+									</div>
+								</div>
+							<?} else {?>
+								<div>
+									<div class="c-product-status c-product-status-notexist">
+										Нет в наличии
+									</div>
+								</div>
+							<?}?>
+							</div>
+						<?}?>
+
+						<?if($product['is_exist'] == 'Y') {?>
+							<div class="c-product-order">
+								<button 
+									type="button" 
+									class="btn btn-default c-btn-large orderButton" 
+									data-product-id="<?=$product['id']?>">
+								<?if($product['price'] > 0) {?>	
+									Купить
+								<?} else {?>
+									Заказать
+								<?}?>
+								</button>
+							</div>
+						<?}?>
 					<?/*
 						<h2>Технические характеристики</h2>
 						<table>
